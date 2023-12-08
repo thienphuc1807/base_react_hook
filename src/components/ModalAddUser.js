@@ -5,8 +5,8 @@ import { useState } from "react";
 import { addNewUser } from "../services/userServices";
 import { toast } from "react-toastify";
 
-function ModalUser(props) {
-    const { show, handleClose, handleUpdateTable } = props;
+function ModalAddUser(props) {
+    const { showAddNew, handleClose, handleUpdateTable } = props;
     const [name, setName] = useState("");
     const [job, setJob] = useState("");
 
@@ -26,9 +26,9 @@ function ModalUser(props) {
 
     return (
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={showAddNew} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Add New User</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -71,4 +71,4 @@ function ModalUser(props) {
     );
 }
 
-export default ModalUser;
+export default ModalAddUser;

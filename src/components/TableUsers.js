@@ -2,13 +2,16 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/userServices";
 import ReactPaginate from "react-paginate";
-import ModalUser from "./ModalUser";
+import ModalAddUser from "./ModalAddUser";
+import ModalEditUser from "./ModalEditUser";
 import "../App.scss";
 
 function TableUsers() {
     const [listUser, setListUser] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
-    const [show, setShow] = useState(false);
+    const [showEdit, setShowEdit] = useState(false);
+    const [showAddNew, setShowAddNew] = useState(false);
+    const [dataUserEdit, setDataUserEdit] = useState({});
 
     useEffect(() => {
         getUser(1);
@@ -23,7 +26,8 @@ function TableUsers() {
     };
 
     const handleClose = () => {
-        setShow(false);
+        setShowEdit(false);
+        setShowAddNew(false);
     };
 
     const handlePageClick = (e) => {
@@ -34,21 +38,32 @@ function TableUsers() {
         setListUser([user, ...listUser]);
     };
 
+    const handleEditUser = (user) => {
+        setShowEdit(true);
+        setDataUserEdit(user);
+    };
+
     return (
         <>
             <div className="d-flex mb-4 justify-content-between align-items-center">
                 <h1>List User</h1>
                 <button
                     className="btn btn-success"
-                    onClick={() => setShow(true)}
+                    onClick={() => setShowAddNew(true)}
                 >
                     Add New User
                 </button>
             </div>
-            <ModalUser
-                show={show}
+            <ModalAddUser
+                showAddNew={showAddNew}
                 handleClose={handleClose}
                 handleUpdateTable={handleUpdateTable}
+            />
+            <ModalEditUser
+                showEdit={showEdit}
+                handleClose={handleClose}
+                // handleUpdateTable={handleUpdateTable}
+                dataUserEdit={dataUserEdit}
             />
             <Table striped bordered hover>
                 <thead>
@@ -57,6 +72,7 @@ function TableUsers() {
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +84,17 @@ function TableUsers() {
                                 <td>{user.first_name}</td>
                                 <td>{user.last_name}</td>
                                 <td>{user.email}</td>
+                                <td className="d-flex gap-3 px-3">
+                                    <button
+                                        className="btn btn-success"
+                                        onClick={() => handleEditUser(user)}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button className="btn btn-danger">
+                                        Delete
+                                    </button>
+                                </td>
                             </tr>
                         ))}
                 </tbody>
