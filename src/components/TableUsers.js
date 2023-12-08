@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { fetchAllUser } from "../services/userServices";
 import ReactPaginate from "react-paginate";
+import "../App.scss";
 
 function TableUsers(props) {
     const [listUser, setListUser] = useState([]);
@@ -48,7 +49,7 @@ function TableUsers(props) {
                 </tbody>
             </Table>
             <ReactPaginate
-                className="d-flex gap-3 text-decoration-none list-unstyled justify-content-center "
+                className="react-paginate"
                 breakLabel="..."
                 nextLabel="next >"
                 onPageChange={handlePageClick}
