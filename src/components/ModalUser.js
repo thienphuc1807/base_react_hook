@@ -2,14 +2,28 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
+import { addNewUser } from "../services/userServices";
+import { toast } from "react-toastify";
 
 function ModalUser(props) {
-    const { show, handleClose } = props;
+    const { show, handleClose, handleUpdateTable } = props;
     const [name, setName] = useState("");
     const [job, setJob] = useState("");
-    const handleSaveUser = () => {
-        console.log("Name = ", name, "Job = ", job);
+
+    const handleSaveUser = async () => {
+        let res = await addNewUser(name, job);
+        if (res && res.id) {
+            console.log(res);
+            handleClose();
+            setName("");
+            setJob("");
+            toast.success("Add successfully!");
+            handleUpdateTable({ first_name: name, id: res.id });
+        } else {
+            toast.error("Error");
+        }
     };
+
     return (
         <>
             <Modal show={show} onHide={handleClose}>
