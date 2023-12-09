@@ -11,4 +11,11 @@ function addNewUser(name, job) {
     });
 }
 
-export { fetchAllUser, addNewUser };
+function updateUser(name, job) {
+    return instance.put("/api/users/", {
+        name: name,
+        job: job,
+    });
+}
+
+export { fetchAllUser, addNewUser, updateUser };

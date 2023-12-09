@@ -5,6 +5,7 @@ import ReactPaginate from "react-paginate";
 import ModalAddUser from "./ModalAddUser";
 import ModalEditUser from "./ModalEditUser";
 import "../App.scss";
+import _ from "lodash";
 
 function TableUsers() {
     const [listUser, setListUser] = useState([]);
@@ -43,6 +44,14 @@ function TableUsers() {
         setDataUserEdit(user);
     };
 
+    const handelEditUserFromModal = (user) => {
+        let cloneListUser = _.cloneDeep(listUser);
+        let index = listUser.findIndex((item) => item.id === user.id);
+        cloneListUser[index].first_name = user.first_name;
+        setListUser(cloneListUser);
+        
+    };
+
     return (
         <>
             <div className="d-flex mb-4 justify-content-between align-items-center">
@@ -64,6 +73,7 @@ function TableUsers() {
                 handleClose={handleClose}
                 // handleUpdateTable={handleUpdateTable}
                 dataUserEdit={dataUserEdit}
+                handelEditUserFromModal={handelEditUserFromModal}
             />
             <Table striped bordered hover>
                 <thead>
