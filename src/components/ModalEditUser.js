@@ -6,22 +6,22 @@ import { updateUser } from "../services/userServices";
 import { toast } from "react-toastify";
 
 function ModalEditUser(props) {
-    const { showEdit, handleClose, dataUserEdit, handelEditUserFromModal } =
+    const { showEdit, handleClose, dataUser, handelEditUserFromModal } =
         props;
     const [name, setName] = useState("");
     const [job, setJob] = useState("");
 
     useEffect(() => {
         if (showEdit) {
-            setName(dataUserEdit.first_name);
+            setName(dataUser.first_name);
         }
-    }, [showEdit, dataUserEdit]);
+    }, [showEdit, dataUser]);
 
     const handleEditUser = async () => {
         let res = await updateUser(name, job);
         console.log(res);
         if (res && res.updatedAt) {
-            handelEditUserFromModal({ first_name: name, id: dataUserEdit.id });
+            handelEditUserFromModal({ first_name: name, id: dataUser.id });
             handleClose();
             toast.success("Update Success!");
         } else {
@@ -30,7 +30,12 @@ function ModalEditUser(props) {
     };
     return (
         <>
-            <Modal show={showEdit} onHide={handleClose}>
+            <Modal
+                show={showEdit}
+                onHide={handleClose}
+                backdrop="static"
+                keyboard={false}
+            >
                 <Modal.Header closeButton>
                     <Modal.Title>Edit User</Modal.Title>
                 </Modal.Header>

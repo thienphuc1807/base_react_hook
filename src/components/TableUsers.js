@@ -4,6 +4,7 @@ import { fetchAllUser } from "../services/userServices";
 import ReactPaginate from "react-paginate";
 import ModalAddUser from "./ModalAddUser";
 import ModalEditUser from "./ModalEditUser";
+import ModalDeleteUser from "./ModalDeleteUser";
 import "../App.scss";
 import _ from "lodash";
 
@@ -12,7 +13,8 @@ function TableUsers() {
     const [totalPages, setTotalPages] = useState(0);
     const [showEdit, setShowEdit] = useState(false);
     const [showAddNew, setShowAddNew] = useState(false);
-    const [dataUserEdit, setDataUserEdit] = useState({});
+    const [showDelete, setShowDelete] = useState(false);
+    const [dataUser, setDataUser] = useState({});
 
     useEffect(() => {
         getUser(1);
@@ -29,6 +31,7 @@ function TableUsers() {
     const handleClose = () => {
         setShowEdit(false);
         setShowAddNew(false);
+        setShowDelete(false);
     };
 
     const handlePageClick = (e) => {
@@ -41,7 +44,7 @@ function TableUsers() {
 
     const handleEditUser = (user) => {
         setShowEdit(true);
-        setDataUserEdit(user);
+        setDataUser(user);
     };
 
     const handelEditUserFromModal = (user) => {
@@ -49,7 +52,19 @@ function TableUsers() {
         let index = listUser.findIndex((item) => item.id === user.id);
         cloneListUser[index].first_name = user.first_name;
         setListUser(cloneListUser);
-        
+    };
+
+    const handleDeleteUserFromModal = (id) => {
+        let cloneListUser = _.cloneDeep(listUser);
+        let index = listUser.findIndex((item) => item.id === id);
+        console.log(index);
+        cloneListUser.splice(index, 1);
+        setListUser(cloneListUser);
+    };
+
+    const handleDeleteUser = (user) => {
+        setShowDelete(true);
+        setDataUser(user);
     };
 
     return (
@@ -72,8 +87,14 @@ function TableUsers() {
                 showEdit={showEdit}
                 handleClose={handleClose}
                 // handleUpdateTable={handleUpdateTable}
-                dataUserEdit={dataUserEdit}
+                dataUser={dataUser}
                 handelEditUserFromModal={handelEditUserFromModal}
+            />
+            <ModalDeleteUser
+                showDelete={showDelete}
+                handleClose={handleClose}
+                dataUser={dataUser}
+                handleDeleteUserFromModal={handleDeleteUserFromModal}
             />
             <Table striped bordered hover>
                 <thead>
@@ -101,7 +122,10 @@ function TableUsers() {
                                     >
                                         Edit
                                     </button>
-                                    <button className="btn btn-danger">
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => handleDeleteUser(user)}
+                                    >
                                         Delete
                                     </button>
                                 </td>

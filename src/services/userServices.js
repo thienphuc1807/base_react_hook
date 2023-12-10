@@ -18,4 +18,8 @@ function updateUser(name, job) {
     });
 }
 
-export { fetchAllUser, addNewUser, updateUser };
+function deleteUser(id) {
+    return instance.delete(`/api/users/${id}`);
+}
+
+export { fetchAllUser, addNewUser, updateUser, deleteUser };
