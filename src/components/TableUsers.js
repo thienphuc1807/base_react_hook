@@ -7,6 +7,15 @@ import ModalEditUser from "./ModalEditUser";
 import ModalDeleteUser from "./ModalDeleteUser";
 import "../App.scss";
 import _ from "lodash";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faArrowDown,
+    faArrowUp,
+    faCirclePlus,
+    faFileExport,
+    faFileImport,
+} from "@fortawesome/free-solid-svg-icons";
+import { CSVLink } from "react-csv";
 
 function TableUsers() {
     const [listUser, setListUser] = useState([]);
@@ -15,6 +24,8 @@ function TableUsers() {
     const [showAddNew, setShowAddNew] = useState(false);
     const [showDelete, setShowDelete] = useState(false);
     const [dataUser, setDataUser] = useState({});
+    const [sortBy, setSortBy] = useState("asc");
+    const [sortField, setSortField] = useState("");
 
     useEffect(() => {
         getUser(1);
@@ -67,16 +78,64 @@ function TableUsers() {
         setDataUser(user);
     };
 
+    const handleSort = (sort, field) => {
+        if (sort && field) {
+            setSortBy(sort);
+            setSortField(field);
+            let cloneListUser = _.cloneDeep(listUser);
+            cloneListUser = _.orderBy(listUser, [field], [sort]);
+            setListUser(cloneListUser);
+        }
+    };
+    console.log(sortBy, sortField);
+
+    const handleSearch = _.debounce((value) => {
+        console.log(value);
+        if (value) {
+            let cloneListUser = _.cloneDeep(listUser);
+            cloneListUser = cloneListUser.filter((item) =>
+                item.email.includes(value.toLowerCase())
+            );
+            setListUser(cloneListUser);
+        } else {
+            getUser(1);
+        }
+    }, 1000);
+
+    const csvData = [
+        ["firstname", "lastname", "email"],
+        ["Ahmed", "Tomi", "ah@smthing.co.com"],
+        ["Raed", "Labes", "rl@smthing.co.com"],
+        ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+    ];
+
     return (
         <>
             <div className="d-flex mb-4 justify-content-between align-items-center">
                 <h1>List User</h1>
-                <button
-                    className="btn btn-success"
-                    onClick={() => setShowAddNew(true)}
-                >
-                    Add New User
-                </button>
+                <div className="d-flex gap-2">
+                    <label htmlFor="import" className="btn btn-danger">
+                        <FontAwesomeIcon className="me-2" icon={faFileImport} />
+                        Import
+                    </label>
+                    <input type="file" id="import" hidden />
+                    <CSVLink
+                        filename={"user.csv"}
+                        data={csvData}
+                        target="_blank"
+                        className="btn btn-primary "
+                    >
+                        <FontAwesomeIcon className="me-2" icon={faFileExport} />
+                        Export File
+                    </CSVLink>
+                    <button
+                        className="btn btn-success"
+                        onClick={() => setShowAddNew(true)}
+                    >
+                        <FontAwesomeIcon className="me-2" icon={faCirclePlus} />
+                        Add New User
+                    </button>
+                </div>
             </div>
             <ModalAddUser
                 showAddNew={showAddNew}
@@ -96,12 +155,65 @@ function TableUsers() {
                 dataUser={dataUser}
                 handleDeleteUserFromModal={handleDeleteUserFromModal}
             />
+            <input
+                type="text"
+                placeholder="Search by Email ..."
+                onChange={(e) => handleSearch(e.target.value)}
+            />
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
+                        <th
+                            onClick={() =>
+                                handleSort(
+                                    sortBy === "asc" ? "desc" : "asc",
+                                    "id"
+                                )
+                            }
+                        >
+                            <div className="d-flex align-items-center justify-content-between">
+                                <p className="m-0">ID</p>
+                                {sortBy === "asc" ? (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </div>
+                        </th>
+                        <th
+                            onClick={() =>
+                                handleSort(
+                                    sortBy === "asc" ? "desc" : "asc",
+                                    "first_name"
+                                )
+                            }
+                        >
+                            <div className="d-flex align-items-center justify-content-between">
+                                <p className="m-0">First Name</p>
+                                {sortBy === "asc" ? (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </div>
+                        </th>
+                        <th
+                            onClick={() =>
+                                handleSort(
+                                    sortBy === "asc" ? "desc" : "asc",
+                                    "last_name"
+                                )
+                            }
+                        >
+                            <div className="d-flex align-items-center justify-content-between">
+                                <p className="m-0">Last Name</p>
+                                {sortBy === "asc" ? (
+                                    <FontAwesomeIcon icon={faArrowUp} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faArrowDown} />
+                                )}
+                            </div>
+                        </th>
                         <th>Email</th>
                         <th>Actions</th>
                     </tr>
