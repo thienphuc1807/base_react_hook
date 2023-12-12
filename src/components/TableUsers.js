@@ -26,6 +26,7 @@ function TableUsers() {
     const [dataUser, setDataUser] = useState({});
     const [sortBy, setSortBy] = useState("asc");
     const [sortField, setSortField] = useState("");
+    const [dataExport, setDataExport] = useState([]);
 
     useEffect(() => {
         getUser(1);
@@ -102,13 +103,22 @@ function TableUsers() {
         }
     }, 1000);
 
-    const csvData = [
-        ["firstname", "lastname", "email"],
-        ["Ahmed", "Tomi", "ah@smthing.co.com"],
-        ["Raed", "Labes", "rl@smthing.co.com"],
-        ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-    ];
-
+    const getUserExport = (event, done) => {
+        let result = [];
+        if (listUser && listUser.length > 0) {
+            result.push(["ID", "Email1", "First Name1", "Last Name"]);
+            listUser.map((item, index) => {
+                let arr = [];
+                arr[0] = item.id;
+                arr[1] = item.email;
+                arr[2] = item.first_name;
+                arr[3] = item.last_name;
+                return result.push(arr);
+            });
+            setDataExport(result);
+            done();
+        }
+    };
     return (
         <>
             <div className="d-flex mb-4 justify-content-between align-items-center">
@@ -121,7 +131,9 @@ function TableUsers() {
                     <input type="file" id="import" hidden />
                     <CSVLink
                         filename={"user.csv"}
-                        data={csvData}
+                        data={dataExport}
+                        asyncOnClick={true}
+                        onClick={getUserExport}
                         target="_blank"
                         className="btn btn-primary "
                     >
