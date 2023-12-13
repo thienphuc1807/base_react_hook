@@ -16,6 +16,8 @@ import {
     faFileImport,
 } from "@fortawesome/free-solid-svg-icons";
 import { CSVLink } from "react-csv";
+import Papa from "papaparse";
+import { toast } from "react-toastify";
 
 function TableUsers() {
     const [listUser, setListUser] = useState([]);
@@ -69,7 +71,6 @@ function TableUsers() {
     const handleDeleteUserFromModal = (id) => {
         let cloneListUser = _.cloneDeep(listUser);
         let index = listUser.findIndex((item) => item.id === id);
-        console.log(index);
         cloneListUser.splice(index, 1);
         setListUser(cloneListUser);
     };
@@ -88,7 +89,6 @@ function TableUsers() {
             setListUser(cloneListUser);
         }
     };
-    console.log(sortBy, sortField);
 
     const handleSearch = _.debounce((value) => {
         console.log(value);
@@ -106,7 +106,7 @@ function TableUsers() {
     const getUserExport = (event, done) => {
         let result = [];
         if (listUser && listUser.length > 0) {
-            result.push(["ID", "Email1", "First Name1", "Last Name"]);
+            result.push(["ID", "Email", "First Name", "Last Name"]);
             listUser.map((item, index) => {
                 let arr = [];
                 arr[0] = item.id;
@@ -119,6 +119,58 @@ function TableUsers() {
             done();
         }
     };
+
+    const handleImportCSV = (e) => {
+        if (e.target && e.target.files && e.target.files[0]) {
+            let file = e.target.files[0];
+
+            if (file.type !== "text/csv") {
+                toast.error("Only accept text/csv files...");
+                return;
+            }
+
+            Papa.parse(file, {
+                complete: function (result) {
+                    let rawCSV = result.data;
+                    console.log(rawCSV);
+                    if (
+                        rawCSV.length > 0 &&
+                        rawCSV[0][0] !== "" &&
+                        rawCSV[0][1] !== ""
+                    ) {
+                        if (rawCSV[0] && rawCSV[0].length === 3) {
+                            if (
+                                rawCSV[0][0] !== "email" ||
+                                rawCSV[0][1] !== "first_name" ||
+                                rawCSV[0][2] !== "last_name"
+                            ) {
+                                toast.error("Wrong format Header CSV file!");
+                            } else {
+                                let result = [];
+                                rawCSV.map((item, index) => {
+                                    if (index > 0 && item.length === 3) {
+                                        let obj = {};
+                                        obj.email = item[0];
+                                        obj.first_name = item[1];
+                                        obj.last_name = item[2];
+                                        result.push(obj);
+                                    }
+                                    return result;
+                                });
+                                setListUser(result);
+                                toast.success("Import Success!");
+                            }
+                        } else {
+                            toast.error("Wrong format CSV file!");
+                        }
+                    } else {
+                        toast.error("Not found data on CSV file!");
+                    }
+                },
+            });
+        }
+    };
+
     return (
         <>
             <div className="d-flex mb-4 justify-content-between align-items-center">
@@ -128,14 +180,19 @@ function TableUsers() {
                         <FontAwesomeIcon className="me-2" icon={faFileImport} />
                         Import
                     </label>
-                    <input type="file" id="import" hidden />
+                    <input
+                        type="file"
+                        id="import"
+                        onChange={(e) => handleImportCSV(e)}
+                        hidden
+                    />
                     <CSVLink
-                        filename={"user.csv"}
+                        filename={"user"}
                         data={dataExport}
                         asyncOnClick={true}
                         onClick={getUserExport}
-                        target="_blank"
-                        className="btn btn-primary "
+                        className="btn btn-primary"
+                        separator={";"}
                     >
                         <FontAwesomeIcon className="me-2" icon={faFileExport} />
                         Export File
