@@ -1,7 +1,7 @@
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import "../App.scss";
 
 function Header() {
@@ -20,8 +20,11 @@ function Header() {
                 </Nav>
                 <Nav>
                     <NavDropdown title="Setting" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="/login">Login</NavDropdown.Item>
-                        <NavDropdown.Item href="/logout">
+                        <Link to="/login" className="dropdown-item">
+                            Login
+                        </Link>
+
+                        <NavDropdown.Item>
                             Logout
                         </NavDropdown.Item>
                     </NavDropdown>
