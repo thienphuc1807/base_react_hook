@@ -5,10 +5,23 @@ import {
     faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { userLogin } from "../services/userServices";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+
+    const handleLogin = async () => {
+        if (!email || !password) {
+            toast.error("Email and password is required!");
+            return;
+        }
+        let res = await userLogin(email, password);
+        if (res && res.token) {
+            localStorage.setItem("token", res.token);
+        }
+    };
     return (
         <div className="d-flex flex-column mx-auto col-12 col-lg-4">
             <h1 className="text-center">Login</h1>
@@ -42,6 +55,7 @@ function Login() {
                         : "btn btn-secondary my-2 py-2"
                 }
                 disabled={email && password ? false : true}
+                onClick={() => handleLogin()}
             >
                 Log in
             </button>

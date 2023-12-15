@@ -18,8 +18,15 @@ function updateUser(name, job) {
     });
 }
 
+function userLogin(email, password) {
+    return instance.post("/api/login", {
+        email,
+        password,
+    });
+}
+
 function deleteUser(id) {
     return instance.delete(`/api/users/${id}`);
 }
 
-export { fetchAllUser, addNewUser, updateUser, deleteUser };
+export { fetchAllUser, addNewUser, updateUser, deleteUser, userLogin };
