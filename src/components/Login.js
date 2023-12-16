@@ -3,24 +3,43 @@ import {
     faAnglesLeft,
     faEye,
     faEyeSlash,
+    faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { userLogin } from "../services/userServices";
+import { useNavigate } from "react-router-dom";
 function Login() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [loadingAPI, setLoadingAPI] = useState(false);
+
+    useEffect(() => {
+        let token = localStorage.getItem("token");
+        if (token) {
+            navigate("/");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleLogin = async () => {
         if (!email || !password) {
             toast.error("Email and password is required!");
             return;
         }
+        setLoadingAPI(true);
         let res = await userLogin(email, password);
         if (res && res.token) {
             localStorage.setItem("token", res.token);
+            navigate("/");
+        } else {
+            if (res && res.status === 400) {
+                toast.error(res.data.error);
+            }
         }
+        setLoadingAPI(false);
     };
     return (
         <div className="d-flex flex-column mx-auto col-12 col-lg-4">
@@ -57,7 +76,11 @@ function Login() {
                 disabled={email && password ? false : true}
                 onClick={() => handleLogin()}
             >
-                Log in
+                {loadingAPI ? (
+                    <FontAwesomeIcon className="spinner" icon={faSpinner} />
+                ) : (
+                    <>Log in</>
+                )}
             </button>
             <button className="btn">
                 <FontAwesomeIcon icon={faAnglesLeft} className="me-2" />
