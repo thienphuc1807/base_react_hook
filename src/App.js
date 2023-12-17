@@ -6,8 +6,22 @@ import Header from "./components/Header";
 import TableUsers from "./components/TableUsers";
 import Home from "./components/Home";
 import Login from "./components/Login";
+import { useContext, useEffect } from "react";
+import { UserContext } from "./context/UserContext";
 
 function App() {
+    const { loginContext } = useContext(UserContext);
+
+    useEffect(() => {
+        if (localStorage.getItem("token")) {
+            loginContext(
+                localStorage.getItem("email"),
+                localStorage.getItem("token")
+            );
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Container>
             <Header />

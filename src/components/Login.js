@@ -5,16 +5,20 @@ import {
     faEyeSlash,
     faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { userLogin } from "../services/userServices";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 function Login() {
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loadingAPI, setLoadingAPI] = useState(false);
+
+    const navigate = useNavigate();
+
+    const { loginContext } = useContext(UserContext);
 
     useEffect(() => {
         let token = localStorage.getItem("token");
@@ -32,7 +36,7 @@ function Login() {
         setLoadingAPI(true);
         let res = await userLogin(email, password);
         if (res && res.token) {
-            localStorage.setItem("token", res.token);
+            loginContext(email, res.token);
             navigate("/");
         } else {
             if (res && res.status === 400) {
@@ -84,7 +88,9 @@ function Login() {
             </button>
             <button className="btn">
                 <FontAwesomeIcon icon={faAnglesLeft} className="me-2" />
-                Go back
+                <Link className="text-decoration-none text-black" to="/">
+                    Go Back
+                </Link>
             </button>
         </div>
     );
