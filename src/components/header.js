@@ -22,7 +22,7 @@ function Header() {
             <Navbar.Brand>CiKey's App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                {((user && user.auth) || window.location.pathname === "/") && (
+                {((user && user.auth) || window.location.pathname === "/" || window.location.pathname === "/user") && (
                     <>
                         <Nav id="navigation" className="me-auto">
                             <NavLink to="/" className="nav-link">

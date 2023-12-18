@@ -48,7 +48,7 @@ function Login() {
     return (
         <div className="d-flex flex-column mx-auto col-12 col-lg-4">
             <h1 className="text-center">Login</h1>
-            <p className="m-0 fw-bold">Email or Username</p>
+            <p className="m-0 fw-bold">Email or Username (eve.holt@reqres.in)</p>
             <input
                 className="mb-2 p-2 border border-2 rounded"
                 type="email"

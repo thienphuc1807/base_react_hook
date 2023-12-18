@@ -90,6 +90,8 @@ function TableUsers() {
         }
     };
 
+    console.log(sortField);
+
     const handleSearch = _.debounce((value) => {
         console.log(value);
         if (value) {
