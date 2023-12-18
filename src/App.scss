@@ -18,15 +18,16 @@ ul.react-paginate {
     display: flex;
     flex-direction: row;
     list-style-type: none;
-    gap: 10px;
     padding: 0;
     margin: 0;
 }
 
-ul.react-paginate li a {
-    border-radius: 7px;
-    padding: 0.1rem 1rem;
+ul.react-paginate li {
     border: gray 1px solid;
+}
+
+ul.react-paginate li a {
+    padding: 0.1rem 1rem;
     cursor: pointer;
 }
 ul.react-paginate li.previous a,

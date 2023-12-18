@@ -175,7 +175,7 @@ function TableUsers() {
 
     return (
         <>
-            <div className="d-flex mb-4 justify-content-between align-items-center">
+            <div className="d-sm-flex mb-2 justify-content-between align-items-center">
                 <h1>List User</h1>
                 <div className="d-flex gap-2">
                     <label htmlFor="import" className="btn btn-danger">
@@ -228,94 +228,99 @@ function TableUsers() {
             />
             <input
                 type="text"
+                className="mb-2 col-12 col-sm-4"
                 placeholder="Search by Email ..."
                 onChange={(e) => handleSearch(e.target.value)}
             />
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th
-                            onClick={() =>
-                                handleSort(
-                                    sortBy === "asc" ? "desc" : "asc",
-                                    "id"
-                                )
-                            }
-                        >
-                            <div className="d-flex align-items-center justify-content-between">
-                                <p className="m-0">ID</p>
-                                {sortBy === "asc" ? (
-                                    <FontAwesomeIcon icon={faArrowUp} />
-                                ) : (
-                                    <FontAwesomeIcon icon={faArrowDown} />
-                                )}
-                            </div>
-                        </th>
-                        <th
-                            onClick={() =>
-                                handleSort(
-                                    sortBy === "asc" ? "desc" : "asc",
-                                    "first_name"
-                                )
-                            }
-                        >
-                            <div className="d-flex align-items-center justify-content-between">
-                                <p className="m-0">First Name</p>
-                                {sortBy === "asc" ? (
-                                    <FontAwesomeIcon icon={faArrowUp} />
-                                ) : (
-                                    <FontAwesomeIcon icon={faArrowDown} />
-                                )}
-                            </div>
-                        </th>
-                        <th
-                            onClick={() =>
-                                handleSort(
-                                    sortBy === "asc" ? "desc" : "asc",
-                                    "last_name"
-                                )
-                            }
-                        >
-                            <div className="d-flex align-items-center justify-content-between">
-                                <p className="m-0">Last Name</p>
-                                {sortBy === "asc" ? (
-                                    <FontAwesomeIcon icon={faArrowUp} />
-                                ) : (
-                                    <FontAwesomeIcon icon={faArrowDown} />
-                                )}
-                            </div>
-                        </th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listUser &&
-                        listUser.length > 0 &&
-                        listUser.map((user, index) => (
-                            <tr key={`user-${index}`}>
-                                <td>{user.id}</td>
-                                <td>{user.first_name}</td>
-                                <td>{user.last_name}</td>
-                                <td>{user.email}</td>
-                                <td className="d-flex gap-3 px-3">
-                                    <button
-                                        className="btn btn-success"
-                                        onClick={() => handleEditUser(user)}
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        className="btn btn-danger"
-                                        onClick={() => handleDeleteUser(user)}
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                </tbody>
-            </Table>
+            <div class="table-responsive">
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th
+                                onClick={() =>
+                                    handleSort(
+                                        sortBy === "asc" ? "desc" : "asc",
+                                        "id"
+                                    )
+                                }
+                            >
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <p className="m-0">ID</p>
+                                    {sortBy === "asc" ? (
+                                        <FontAwesomeIcon icon={faArrowUp} />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faArrowDown} />
+                                    )}
+                                </div>
+                            </th>
+                            <th
+                                onClick={() =>
+                                    handleSort(
+                                        sortBy === "asc" ? "desc" : "asc",
+                                        "first_name"
+                                    )
+                                }
+                            >
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <p className="m-0">First Name</p>
+                                    {sortBy === "asc" ? (
+                                        <FontAwesomeIcon icon={faArrowUp} />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faArrowDown} />
+                                    )}
+                                </div>
+                            </th>
+                            <th
+                                onClick={() =>
+                                    handleSort(
+                                        sortBy === "asc" ? "desc" : "asc",
+                                        "last_name"
+                                    )
+                                }
+                            >
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <p className="m-0">Last Name</p>
+                                    {sortBy === "asc" ? (
+                                        <FontAwesomeIcon icon={faArrowUp} />
+                                    ) : (
+                                        <FontAwesomeIcon icon={faArrowDown} />
+                                    )}
+                                </div>
+                            </th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listUser &&
+                            listUser.length > 0 &&
+                            listUser.map((user, index) => (
+                                <tr key={`user-${index}`}>
+                                    <td>{user.id}</td>
+                                    <td>{user.first_name}</td>
+                                    <td>{user.last_name}</td>
+                                    <td>{user.email}</td>
+                                    <td className="d-flex gap-3 px-3">
+                                        <button
+                                            className="btn btn-success"
+                                            onClick={() => handleEditUser(user)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn btn-danger"
+                                            onClick={() =>
+                                                handleDeleteUser(user)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                    </tbody>
+                </Table>
+            </div>
             <ReactPaginate
                 className="react-paginate"
                 breakLabel="..."

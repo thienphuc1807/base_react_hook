@@ -34,7 +34,7 @@ function Login() {
             return;
         }
         setLoadingAPI(true);
-        let res = await userLogin(email, password);
+        let res = await userLogin(email.trim(), password);
         if (res && res.token) {
             loginContext(email, res.token);
             navigate("/");
@@ -45,10 +45,19 @@ function Login() {
         }
         setLoadingAPI(false);
     };
+
+    const handlePressEnter = (e) => {
+        if (e && e.key === "Enter") {
+            handleLogin();
+        }
+    };
+
     return (
         <div className="d-flex flex-column mx-auto col-12 col-lg-4">
             <h1 className="text-center">Login</h1>
-            <p className="m-0 fw-bold">Email or Username (eve.holt@reqres.in)</p>
+            <p className="m-0 fw-bold">
+                Email or Username (eve.holt@reqres.in)
+            </p>
             <input
                 className="mb-2 p-2 border border-2 rounded"
                 type="email"
@@ -63,6 +72,7 @@ function Login() {
                     placeholder="Enter password ..."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => handlePressEnter(e)}
                 />
 
                 <FontAwesomeIcon
