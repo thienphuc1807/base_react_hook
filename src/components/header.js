@@ -3,26 +3,35 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import "../App.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLogoutRedux } from "../redux/actions/userAction";
+import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/UserContext";
-import { useContext } from "react";
 
 function Header() {
-    const { logout, user } = useContext(UserContext);
     const navigate = useNavigate();
-
+    const user = useSelector((state) => state.user.account);
+    const dispatch = useDispatch();
     const handleLogout = () => {
-        logout();
-        navigate("/");
-        toast.success("Log out success!");
+        dispatch(handleLogoutRedux());
     };
+
+    useEffect(() => {
+        if (user && user.auth === false && window.location.pathname !== '/login') {
+            navigate("/");
+            toast.success("Log out successfully");
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Navbar.Brand>CiKey's App</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-                {((user && user.auth) || window.location.pathname === "/" || window.location.pathname === "/user") && (
+                {((user && user.auth) ||
+                    window.location.pathname === "/" ||
+                    window.location.pathname === "/user") && (
                     <>
                         <Nav id="navigation" className="me-auto">
                             <NavLink to="/" className="nav-link">

@@ -5,45 +5,36 @@ import {
     faEyeSlash,
     faSpinner,
 } from "@fortawesome/free-solid-svg-icons";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { userLogin } from "../services/userServices";
 import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLoginRedux } from "../redux/actions/userAction";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const [loadingAPI, setLoadingAPI] = useState(false);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const { loginContext } = useContext(UserContext);
+    const isLoading = useSelector((state) => state.user.isLoading);
+    const account = useSelector((state) => state.user.account);
+
 
     useEffect(() => {
-        let token = localStorage.getItem("token");
-        if (token) {
+        if (account && account.auth === true) {
             navigate("/");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [account]);
 
     const handleLogin = async () => {
         if (!email || !password) {
             toast.error("Email and password is required!");
             return;
         }
-        setLoadingAPI(true);
-        let res = await userLogin(email.trim(), password);
-        if (res && res.token) {
-            loginContext(email, res.token);
-            navigate("/");
-        } else {
-            if (res && res.status === 400) {
-                toast.error(res.data.error);
-            }
-        }
-        setLoadingAPI(false);
+        dispatch(handleLoginRedux(email, password));
     };
 
     const handlePressEnter = (e) => {
@@ -90,7 +81,7 @@ function Login() {
                 disabled={email && password ? false : true}
                 onClick={() => handleLogin()}
             >
-                {loadingAPI ? (
+                {isLoading ? (
                     <FontAwesomeIcon className="spinner" icon={faSpinner} />
                 ) : (
                     <>Log in</>
